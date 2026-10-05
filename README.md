@@ -1,3 +1,4 @@
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=140&color=gradient&customColorList=12,14,18&section=header" />
 <h1 align="center">Hi there, I'm DaszNAQ 👋</h1>
 
 <p align="center">
@@ -23,3 +24,4 @@
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DaszNAQ/DaszNAQ/output/github-snake.svg" />
   <img alt="github contribution snake" src="https://raw.githubusercontent.com/DaszNAQ/DaszNAQ/output/github-snake.svg" />
 </picture>
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=120&color=gradient&customColorList=12,14,18&section=footer" />
