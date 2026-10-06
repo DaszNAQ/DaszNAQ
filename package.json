@@ -1,0 +1,22 @@
+{
+  "name": "github-readme-zodiac",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub activity → Zodiac SVG cards + pinned Gist Action",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/local-server.js",
+    "dev": "node scripts/local-server.js",
+    "test": "node --test src/lib/stats.test.js src/gist/render.test.js src/render/card.test.js",
+    "gist": "node scripts/update-gist.js",
+    "extract-signs": "python scripts/extract-zodiac-signs.py",
+    "extract-signs:glyph": "python scripts/extract-zodiac-signs.py glyph",
+    "extract-signs:line": "python scripts/extract-zodiac-signs.py line",
+    "extract-signs:constellation": "python scripts/extract-zodiac-signs.py constellation",
+    "embed-fonts": "node scripts/embed-fonts.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
