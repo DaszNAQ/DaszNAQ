@@ -16,7 +16,7 @@
 
 ---
 <p align="center">
-  <img src="https://TEN-DU-AN.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
+  <img src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
 </p>
 ---
 <picture>
