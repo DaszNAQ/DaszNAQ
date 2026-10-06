@@ -1,4 +1,3 @@
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=140&color=gradient&customColorList=12,14,18&section=header" />
 <h1 align="center">Hi there, I'm DaszNAQ 👋</h1>
 
 <p align="center">
@@ -16,9 +15,10 @@
 🚀 Always learning. Always experimenting. Always building something new.
 
 ---
-
-### 🐍 Contribution Snake
-
+<p align="center">
+  <img src="https://TEN-DU-AN.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
+</p>
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DaszNAQ/DaszNAQ/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DaszNAQ/DaszNAQ/output/github-snake.svg" />
