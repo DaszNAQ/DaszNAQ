@@ -4,6 +4,7 @@ import signIcons from "../data/sign-icons.js";
 import signIconsLine from "../data/sign-icons-line.js";
 import constellationIcons from "../data/constellation-icons.js";
 import { EMBEDDED_FONT_CSS } from "../data/embedded-fonts.js";
+import signature from "../data/signature.js";
 
 /** Design coordinate space (viewBox). Display size can be smaller via options. */
 const WIDTH = 600;
@@ -250,6 +251,19 @@ function renderSignTitle(zodiac, colors, uid) {
     <text class="title" x="${x + size + 10}" y="48" fill="${colors.accent}" font-size="22" font-weight="700" letter-spacing="3">${label}</text>`;
 }
 
+/** Chữ ký góc dưới bên phải — PNG trắng/trong suốt dùng làm mask, tô màu theo theme. */
+function renderSignature(colors, uid) {
+  const w = 84;
+  const h = Math.round((w / 2.852) * 10) / 10; // tỉ lệ ảnh chữ ký 154x54
+  const x = 480;
+  const y = 270;
+  return `
+    <mask id="${uid}-sig" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}">
+      <image href="${signature}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/>
+    </mask>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${colors.text}" opacity="0.88" mask="url(#${uid}-sig)"/>`;
+}
+
 function secondaryDisplayName(profile) {
   const login = String(profile.username || "").trim();
   const name = String(profile.name || "").trim();
@@ -268,12 +282,6 @@ export function renderZodiacCard({ profile, zodiac, stats, meta = {} }) {
   const realName = secondaryDisplayName(profile);
   const role = profile.role || "Software Developer";
   const uid = `zg-${profile.username}-${zodiac.id}`.replace(/[^a-z0-9-]/gi, "");
-  const sourceLabel =
-    meta.source === "birthdate"
-      ? "mapped by birthdate"
-      : meta.source === "param"
-        ? "chosen sign"
-        : "mapped by star-seed";
   const nameLabel = realName ? `${login} (${realName})` : login;
   const nameLine = realName
     ? `${escapeXml(login)}<tspan fill="${colors.muted}" font-size="14" font-weight="400">  ${escapeXml(realName)}</tspan>`
@@ -334,11 +342,9 @@ ${EMBEDDED_FONT_CSS}
     ${renderStatBars(displayStats, colors)}
 
     <text class="body" x="36" y="298" fill="${colors.accent}" font-size="12" opacity="0.9">
-      ✦ Your coding personality written in the stars
+      ✦ Aim far. Explore more. Build something new.
     </text>
-    <text x="560" y="298" text-anchor="end" fill="${colors.muted}" font-size="10" font-family="Georgia, serif" opacity="0.55">
-      ${escapeXml(sourceLabel)}
-    </text>
+    ${renderSignature(colors, uid)}
   </g>
 </svg>`;
 }
