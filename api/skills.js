@@ -1,19 +1,11 @@
-/**
- * api/skills.js
- * Trả về 1 ảnh SVG gồm: icon + tên (font Arial) theo từng nhóm,
- * kèm đường kẻ dọc ở mép phải để phân cách với thẻ Zodiac.
- *
- * Dùng: https://zoodiac-card.vercel.app/api/skills
- */
-
 const SKILLICONS = "https://skillicons.dev/icons?i=";
 const GO_SKILLICONS = "https://go-skill-icons.vercel.app/api/icons?i=";
 
-// ===== SỬA DANH SÁCH Ở ĐÂY =====
-// [mã icon, tên hiển thị]. source "go" = dùng go-skill-icons (cho icon AI)
 const GROUPS = [
   {
     title: "Languages",
+    col: 0,
+    slot: 0,
     items: [
       ["html", "HTML"],
       ["css", "CSS"],
@@ -24,6 +16,8 @@ const GROUPS = [
   },
   {
     title: "Tools",
+    col: 0,
+    slot: 1,
     items: [
       ["figma", "Figma"],
       ["notion", "Notion"],
@@ -32,6 +26,8 @@ const GROUPS = [
   },
   {
     title: "Frameworks",
+    col: 1,
+    slot: 0,
     items: [
       ["react", "React"],
       ["nodejs", "Node.js"],
@@ -40,6 +36,8 @@ const GROUPS = [
   },
   {
     title: "AI",
+    col: 1,
+    slot: 1,
     source: "go",
     items: [
       ["claude", "Claude"],
@@ -49,16 +47,24 @@ const GROUPS = [
     ],
   },
 ];
-// ================================
 
-const WIDTH = 340;
-const COLS = 2;
-const COL_X = [20, 180];
-const ICON = 28;
-const ROW_H = 40;
-const TITLE_H = 34;
-const GROUP_GAP = 14;
-const TOP = 12;
+const CUSTOM_ICONS = {
+  trello: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+    <rect width="48" height="48" rx="8" fill="#161b22"/>
+    <rect x="9" y="9" width="30" height="30" rx="5" fill="#0079bf"/>
+    <rect x="14" y="14" width="8" height="18" rx="2" fill="#ffffff"/>
+    <rect x="26" y="14" width="8" height="11" rx="2" fill="#ffffff"/>
+  </svg>`,
+};
+
+const WIDTH = 420;
+const HEIGHT = 224; 
+const CELL_W = WIDTH / 2;
+const ICON = 20;
+const ROW_H = 26;
+const ITEM_X = [14, 112];
+const TITLE_Y = [20, 128]; 
+const ITEMS_Y = [28, 136]; 
 
 function escapeXml(str) {
   return String(str ?? "")
@@ -68,25 +74,33 @@ function escapeXml(str) {
     .replace(/"/g, "&quot;");
 }
 
+function toDataUri(svgText) {
+  return `data:image/svg+xml;base64,${Buffer.from(svgText).toString("base64")}`;
+}
+
 async function fetchIcon(source, id) {
+  if (CUSTOM_ICONS[id]) return toDataUri(CUSTOM_ICONS[id]);
   const base = source === "go" ? GO_SKILLICONS : SKILLICONS;
   const res = await fetch(`${base}${encodeURIComponent(id)}&theme=dark`, {
     signal: AbortSignal.timeout(6000),
   });
   if (!res.ok) throw new Error(`icon ${id}: HTTP ${res.status}`);
   const text = await res.text();
-  if (!text.includes("<svg")) throw new Error(`icon ${id}: not svg`);
-  return `data:image/svg+xml;base64,${Buffer.from(text).toString("base64")}`;
+  // Ảnh rỗng (icon không tồn tại) thường rất ngắn -> coi như lỗi
+  if (!text.includes("<svg") || text.length < 400) {
+    throw new Error(`icon ${id}: empty or not svg`);
+  }
+  return toDataUri(text);
 }
 
 function placeholder(x, y, label) {
   const letter = escapeXml(String(label).charAt(0).toUpperCase());
-  return `<rect x="${x}" y="${y}" width="${ICON}" height="${ICON}" rx="6" fill="#1e3a8a"/>
-    <text x="${x + ICON / 2}" y="${y + 19}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#e0f2fe">${letter}</text>`;
+  return `<rect x="${x}" y="${y}" width="${ICON}" height="${ICON}" rx="5" fill="#1e3a8a"/>
+    <text x="${x + ICON / 2}" y="${y + 14}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#e0f2fe">${letter}</text>`;
 }
 
 async function renderSvg() {
-  // Tải tất cả icon song song; icon nào lỗi thì dùng ô chữ cái thay thế
+  // Tải icon song song; icon nào lỗi thì dùng ô chữ cái thay thế
   const jobs = GROUPS.flatMap((g) =>
     g.items.map(([id]) =>
       fetchIcon(g.source, id).then(
@@ -97,42 +111,37 @@ async function renderSvg() {
   );
   const icons = Object.fromEntries(await Promise.all(jobs));
 
-  let y = TOP;
   const parts = [];
 
   for (const group of GROUPS) {
+    const gx = group.col * CELL_W;
+
+    // Tiêu đề căn giữa trong ô của nhóm
     parts.push(
-      `<text class="t h" x="${COL_X[0]}" y="${y + 18}">${escapeXml(group.title)}</text>`,
+      `<text class="t h" x="${gx + CELL_W / 2}" y="${TITLE_Y[group.slot]}" text-anchor="middle">${escapeXml(group.title)}</text>`,
     );
-    y += TITLE_H;
 
     group.items.forEach(([id, name], i) => {
-      const col = i % COLS;
-      const row = Math.floor(i / COLS);
-      const x = COL_X[col];
-      const iy = y + row * ROW_H;
+      const x = gx + ITEM_X[i % 2];
+      const y = ITEMS_Y[group.slot] + Math.floor(i / 2) * ROW_H;
       const uri = icons[id];
       parts.push(
         uri
-          ? `<image href="${uri}" x="${x}" y="${iy}" width="${ICON}" height="${ICON}"/>`
-          : placeholder(x, iy, name),
+          ? `<image href="${uri}" x="${x}" y="${y}" width="${ICON}" height="${ICON}"/>`
+          : placeholder(x, y, name),
       );
       parts.push(
-        `<text class="t n" x="${x + ICON + 10}" y="${iy + 19}">${escapeXml(name)}</text>`,
+        `<text class="t n" x="${x + ICON + 7}" y="${y + 14}">${escapeXml(name)}</text>`,
       );
     });
-
-    y += Math.ceil(group.items.length / COLS) * ROW_H + GROUP_GAP;
   }
 
-  const height = y;
-
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${WIDTH}" height="${height}" viewBox="0 0 ${WIDTH} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Languages, tools, frameworks and AI">
+<svg width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Languages, tools, frameworks and AI">
   <style>
     .t { font-family: Arial, Helvetica, sans-serif; fill: #1f2937; }
-    .h { font-size: 16px; font-weight: 700; }
-    .n { font-size: 14px; }
+    .h { font-size: 13px; font-weight: 700; }
+    .n { font-size: 11px; }
     .d { stroke: #d0d7de; }
     @media (prefers-color-scheme: dark) {
       .t { fill: #e0f2fe; }
@@ -140,7 +149,7 @@ async function renderSvg() {
     }
   </style>
   ${parts.join("\n  ")}
-  <line class="d" x1="${WIDTH - 1}" y1="8" x2="${WIDTH - 1}" y2="${height - 8}" stroke-width="1"/>
+  <line class="d" x1="${WIDTH - 1}" y1="8" x2="${WIDTH - 1}" y2="${HEIGHT - 8}" stroke-width="1"/>
 </svg>`;
 }
 
