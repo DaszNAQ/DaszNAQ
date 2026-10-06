@@ -1,10 +1,10 @@
-import { pickDisplayStats, relativeFill, formatStatValue } from "../lib/stats.js";
-import { seededRandom } from "../lib/zodiac.js";
-import signIcons from "../data/sign-icons.js";
-import signIconsLine from "../data/sign-icons-line.js";
-import constellationIcons from "../data/constellation-icons.js";
-import { EMBEDDED_FONT_CSS } from "../data/embedded-fonts.js";
-import signature from "../data/signature.js";
+import { pickDisplayStats, relativeFill, formatStatValue } from "../src/lib/stats.js";
+import { seededRandom } from "../src/lib/zodiac.js";
+import signIcons from "../src/data/sign-icons.js";
+import signIconsLine from "../src/data/sign-icons-line.js";
+import constellationIcons from "../src/data/constellation-icons.js";
+import { EMBEDDED_FONT_CSS } from "../src/data/embedded-fonts.js";
+import signature from "../src/data/signature.js";
 
 /** Design coordinate space (viewBox). Display size can be smaller via options. */
 const WIDTH = 600;
