@@ -5,7 +5,6 @@
 </p>
 
 ---
-
 🌱 I'm a curious learner exploring the world of modern technology and digital creation.
 
 💻 I enjoy experimenting with software, 🎮 game design, and 🌐 web design, turning ideas into small projects while learning through hands-on experience.
@@ -15,9 +14,20 @@
 🚀 Always learning. Always experimenting. Always building something new.
 
 ---
-<p align="center">
-  <img src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
-</p>
+<table align="center">
+  <tr>
+    <td align="center" valign="middle" width="40%">
+      <h3>🛠️ Languages & Tools</h3>
+      <img src="https://skillicons.dev/icons?i=html,css,js,cs,cpp,unity,figma,notion&theme=dark&perline=4" alt="Languages and Tools" />
+      <h3>🤖 AI</h3>
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=claude,gemini,grok,chatgpt&theme=dark&perline=4" alt="AI tools" />
+    </td>
+    <td align="center" valign="middle" width="60%">
+      <img src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=420" alt="Sagittarius Zodiac Card" />
+    </td>
+  </tr>
+</table>
+
 ---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DaszNAQ/DaszNAQ/output/github-snake-dark.svg" />
