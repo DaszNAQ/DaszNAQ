@@ -14,19 +14,9 @@
 🚀 Always learning. Always experimenting. Always building something new.
 
 ---
-<table align="center">
-  <tr>
-    <td align="center" valign="middle" width="40%">
-      <h3>🛠️ Languages & Tools</h3>
-      <img src="https://skillicons.dev/icons?i=html,css,js,cs,cpp,unity,figma,notion&theme=dark&perline=4" alt="Languages and Tools" />
-      <h3>🤖 AI</h3>
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=claude,gemini,grok,chatgpt&theme=dark&perline=4" alt="AI tools" />
-    </td>
-    <td align="center" valign="middle" width="60%">
-      <img src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=420" alt="Sagittarius Zodiac Card" />
-    </td>
-  </tr>
-</table>
+<img align="left" width="45%" src="https://zoodiac-card.vercel.app/api/skills" alt="Languages, Tools, Frameworks and AI" />
+<img align="right" width="54%" src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
+<br clear="all" />
 
 ---
 <picture>
