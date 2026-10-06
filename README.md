@@ -14,9 +14,10 @@
 🚀 Always learning. Always experimenting. Always building something new.
 
 ---
-<img align="left" width="45%" src="https://zoodiac-card.vercel.app/api/skills" alt="Languages, Tools, Frameworks and AI" />
-<img align="right" width="54%" src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&width=480" alt="Sagittarius Zodiac Card" />
-<br clear="all" />
+<p align="center">
+  <img width="49%" src="https://zoodiac-card.vercel.app/api/skills?v=3" alt="Languages, Tools, Frameworks and AI" />
+  <img width="49%" src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius" alt="Sagittarius Zodiac Card" />
+</p>
 
 ---
 <picture>
