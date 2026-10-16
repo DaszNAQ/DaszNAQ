@@ -1,36 +1,29 @@
-function score(value) {
-  if (value <= 0) return 0;
-  return Math.round(value);
-}
-
-/** Developer traits from public GitHub signals. No hard cap. */
+/**
+ * Số liệu GỐC lấy trực tiếp từ GitHub (không còn công thức trọng số):
+ *  - explorer    : số ngôn ngữ khác nhau dùng trong các repo của bạn
+ *  - builder     : số repo bạn tự tạo (không tính fork)
+ *  - openSource  : stars + forks nhận được + PR đã merge vào repo người khác
+ *  - consistency : số repo có commit trong 12 tháng gần nhất
+ *  - debugger    : tổng số issue đang mở trên các repo của bạn
+ */
 export function calculateStats(profile) {
   const {
     publicRepos = 0,
-    ageDays = 1,
+    originalRepos = publicRepos,
+    activeRepos = 0,
+    mergedPRs = 0,
     stars = 0,
     forks = 0,
     openIssues = 0,
-    followers = 0,
     languages = [],
   } = profile;
 
-  const reposPerYear = publicRepos / Math.max(ageDays / 365, 0.25);
-
-  const consistency = score(reposPerYear * 8 + Math.min(ageDays / 30, 40));
-  const explorer = score(languages.length * 14 + publicRepos * 0.4);
-  const builder = score(publicRepos * 3 + stars * 0.8 + forks * 1.2);
-  const openSource = score(stars * 1.1 + forks * 2 + followers * 1.5);
-  const debuggerStat = score(
-    openIssues * 2.5 + publicRepos * 1.5 + stars * 0.3,
-  );
-
   return {
-    consistency,
-    explorer,
-    builder,
-    openSource,
-    debugger: debuggerStat,
+    consistency: activeRepos,
+    explorer: languages.length,
+    builder: originalRepos,
+    openSource: stars + forks + mergedPRs,
+    debugger: openIssues,
   };
 }
 

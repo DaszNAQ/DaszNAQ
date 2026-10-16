@@ -196,10 +196,26 @@ function renderStatBars(displayStats, colors) {
     .join("");
 }
 
-function renderLanguages(languages, colors) {
-  const top = (languages || []).slice(0, 3).map((l) => l.name);
-  if (!top.length) return "";
-  const label = top.join("   ·   ");
+/**
+ * Dòng giới thiệu dưới tên. Ưu tiên ?tagline= do người dùng tự đặt;
+ * nếu không có thì hiển thị số liệu thật: repos · followers · năm tham gia.
+ */
+function buildTagline(profile) {
+  const custom = String(profile.tagline || "").trim();
+  if (custom) return custom;
+  const parts = [];
+  const repos = profile.originalRepos ?? profile.publicRepos;
+  if (Number.isFinite(repos)) parts.push(`${repos} repos`);
+  if (Number.isFinite(profile.followers)) {
+    parts.push(`${profile.followers} followers`);
+  }
+  if (profile.joinedYear) parts.push(`since ${profile.joinedYear}`);
+  return parts.join("   ·   ");
+}
+
+function renderTagline(profile, colors) {
+  const label = buildTagline(profile);
+  if (!label) return "";
   return `<text x="36" y="168" fill="${colors.accent}" font-size="13" font-family="Georgia, 'Times New Roman', serif" letter-spacing="0.5">${escapeXml(label)}</text>`;
 }
 
@@ -336,7 +352,7 @@ ${EMBEDDED_FONT_CSS}
       ${escapeXml(role)}
     </text>
 
-    ${renderLanguages(profile.languages, colors)}
+    ${renderTagline(profile, colors)}
     ${renderDescription(zodiac, colors)}
     ${renderLineArt(zodiac, colors, uid)}
     ${renderStatBars(displayStats, colors)}

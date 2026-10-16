@@ -54,28 +54,65 @@ function guessRole(languages) {
   return map[top] || "Software Dev";
 }
 
+/** Lấy tối đa 5 trang x 100 repo (đủ cho hầu hết user). */
+async function fetchAllOwnedRepos(username) {
+  const all = [];
+  for (let page = 1; page <= 5; page++) {
+    const batch = await gh(
+      `/users/${encodeURIComponent(username)}/repos?per_page=100&page=${page}&sort=updated&type=owner`,
+    );
+    all.push(...batch);
+    if (batch.length < 100) break;
+  }
+  return all;
+}
+
+/**
+ * Số PR đã được merge vào repo của người khác (đóng góp open source thật).
+ * Search API có rate limit riêng → lỗi thì trả 0, không làm hỏng card.
+ */
+async function fetchExternalMergedPRs(username) {
+  try {
+    const q = encodeURIComponent(
+      `author:${username} type:pr is:merged -user:${username}`,
+    );
+    const data = await gh(`/search/issues?q=${q}&per_page=1`);
+    return data.total_count || 0;
+  } catch {
+    return 0;
+  }
+}
+
 export async function fetchGitHubProfile(username) {
   const user = await gh(`/users/${encodeURIComponent(username)}`);
-  const repos = await gh(
-    `/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated&type=owner`,
-  );
+  const [repos, mergedPRs] = await Promise.all([
+    fetchAllOwnedRepos(username),
+    fetchExternalMergedPRs(username),
+  ]);
 
-  const languageBytes = {};
+  const languageCount = {};
   let stars = 0;
   let forks = 0;
   let openIssues = 0;
+  let originalRepos = 0;
+  let activeRepos = 0;
+  const yearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
 
   for (const repo of repos) {
     if (repo.fork) continue;
+    originalRepos += 1;
     stars += repo.stargazers_count || 0;
     forks += repo.forks_count || 0;
     openIssues += repo.open_issues_count || 0;
+    if (repo.pushed_at && new Date(repo.pushed_at).getTime() >= yearAgo) {
+      activeRepos += 1;
+    }
     if (repo.language) {
-      languageBytes[repo.language] = (languageBytes[repo.language] || 0) + 1;
+      languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
     }
   }
 
-  const languages = Object.entries(languageBytes)
+  const languages = Object.entries(languageCount)
     .sort((a, b) => b[1] - a[1])
     .map(([name, count]) => ({ name, count }));
 
@@ -93,7 +130,11 @@ export async function fetchGitHubProfile(username) {
     followers: user.followers || 0,
     following: user.following || 0,
     publicRepos: user.public_repos || 0,
+    originalRepos,
+    activeRepos,
+    mergedPRs,
     createdAt: user.created_at,
+    joinedYear: createdAt.getUTCFullYear(),
     ageDays,
     stars,
     forks,

@@ -7,8 +7,10 @@ import {
 } from "./stats.js";
 
 const sample = {
-  publicRepos: 10,
-  ageDays: 365,
+  publicRepos: 12,
+  originalRepos: 10,
+  activeRepos: 4,
+  mergedPRs: 3,
   stars: 100,
   forks: 20,
   openIssues: 8,
@@ -17,46 +19,25 @@ const sample = {
 };
 
 describe("calculateStats", () => {
-  it("returns unbounded weighted scores, not a 0–100 scale", () => {
+  it("returns raw GitHub numbers, not weighted scores", () => {
     const stats = calculateStats(sample);
 
-    assert.equal(stats.consistency, 92);
-    assert.equal(stats.explorer, 32);
-    assert.equal(stats.builder, 134);
-    assert.equal(stats.openSource, 225);
-    assert.equal(stats.debugger, 65);
+    assert.equal(stats.explorer, 2); // số ngôn ngữ
+    assert.equal(stats.builder, 10); // repo gốc (không fork)
+    assert.equal(stats.openSource, 123); // 100 stars + 20 forks + 3 PR merged
+    assert.equal(stats.consistency, 4); // repo active 12 tháng
+    assert.equal(stats.debugger, 8); // open issues
   });
 
-  it("does not clamp high GitHub signals at 100", () => {
-    const stats = calculateStats({
-      publicRepos: 50,
-      ageDays: 365,
-      stars: 10000,
-      forks: 500,
-      openIssues: 0,
-      followers: 2000,
-      languages: [],
+  it("returns 0 for an empty profile", () => {
+    const stats = calculateStats({});
+    assert.deepEqual(stats, {
+      consistency: 0,
+      explorer: 0,
+      builder: 0,
+      openSource: 0,
+      debugger: 0,
     });
-
-    assert.equal(stats.builder, 8750);
-    assert.equal(stats.openSource, 15000);
-    assert.ok(stats.builder > 100);
-    assert.ok(stats.openSource > 100);
-  });
-
-  it("caps only the account-age contribution at 40", () => {
-    const stats = calculateStats({
-      ...sample,
-      publicRepos: 0,
-      ageDays: 3650,
-      stars: 0,
-      forks: 0,
-      openIssues: 0,
-      followers: 0,
-      languages: [],
-    });
-
-    assert.equal(stats.consistency, 40);
   });
 });
 

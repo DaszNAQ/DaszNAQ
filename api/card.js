@@ -41,6 +41,7 @@ export default async function handler(req, res) {
     const role = sanitizeText(url.searchParams.get("role"), 40);
     const name = sanitizeText(url.searchParams.get("name"), 32);
     const width = parseWidth(url.searchParams.get("width"));
+    const tagline = sanitizeText(url.searchParams.get("tagline"), 40);
 
     if (!username) {
       return sendErrorSvg(res, 400, "Missing ?username= parameter");
@@ -52,6 +53,7 @@ export default async function handler(req, res) {
     const profile = await fetchGitHubProfile(username);
     if (role) profile.role = role;
     if (name) profile.name = name;
+    if (tagline) profile.tagline = tagline;
 
     const { zodiac, source } = resolveZodiac({
       username: profile.username,
