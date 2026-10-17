@@ -86,7 +86,7 @@ async function fetchIcon(source, id) {
   });
   if (!res.ok) throw new Error(`icon ${id}: HTTP ${res.status}`);
   const text = await res.text();
-  // Ảnh rỗng (icon không tồn tại) thường rất ngắn -> coi như lỗi
+  // An empty icon is very short, so treat it as an error
   if (!text.includes("<svg") || text.length < 400) {
     throw new Error(`icon ${id}: empty or not svg`);
   }
@@ -100,7 +100,7 @@ function placeholder(x, y, label) {
 }
 
 async function renderSvg() {
-  // Tải icon song song; icon nào lỗi thì dùng ô chữ cái thay thế
+  // Fetch icons in parallel; use a letter tile if one fails
   const jobs = GROUPS.flatMap((g) =>
     g.items.map(([id]) =>
       fetchIcon(g.source, id).then(
@@ -116,7 +116,7 @@ async function renderSvg() {
   for (const group of GROUPS) {
     const gx = group.col * CELL_W;
 
-    // Tiêu đề căn giữa trong ô của nhóm
+    // Center the title within the group cell
     parts.push(
       `<text class="t h" x="${gx + CELL_W / 2}" y="${TITLE_Y[group.slot]}" text-anchor="middle">${escapeXml(group.title)}</text>`,
     );

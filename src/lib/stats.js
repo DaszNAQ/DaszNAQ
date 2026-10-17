@@ -1,10 +1,10 @@
 /**
- * Số liệu GỐC lấy trực tiếp từ GitHub (không còn công thức trọng số):
- *  - explorer    : số ngôn ngữ khác nhau dùng trong các repo của bạn
- *  - builder     : số repo bạn tự tạo (không tính fork)
- *  - openSource  : stars + forks nhận được + PR đã merge vào repo người khác
- *  - consistency : số repo có commit trong 12 tháng gần nhất
- *  - debugger    : tổng số issue đang mở trên các repo của bạn
+ * Raw GitHub numbers (no weighted formulas):
+ *  - explorer    : distinct languages across your repos
+ *  - builder     : original repos (forks excluded)
+ *  - openSource  : stars + forks + PRs merged into others' repos
+ *  - consistency : repos pushed to in the last 12 months
+ *  - debugger    : open issues across your repos
  */
 export function calculateStats(profile) {
   const {
@@ -34,7 +34,7 @@ export function relativeFill(value, peak, width) {
   return Math.max(0, Math.min(width, Math.round((v / peak) * width)));
 }
 
-/** 0–999 as-is; 1000+ as k (e.g. 1200 → 1.2k, 10000 → 10k). */
+/** 0-999 as-is; 1000+ as k (1200 -> 1.2k, 10000 -> 10k). */
 export function formatStatValue(n) {
   const v = Math.max(0, Number(n) || 0);
   if (v < 1000) return String(v);

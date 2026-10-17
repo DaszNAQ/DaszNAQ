@@ -30,7 +30,7 @@ async function gh(path) {
 
 function guessRole(languages) {
   const top = languages[0]?.name?.toLowerCase() ?? "";
-  // Short labels — pin/SVG both clip easily with long "…Developer" strings
+  // Short labels: long "...Developer" strings get clipped
   const map = {
     python: "Backend Dev",
     go: "Backend Dev",
@@ -54,7 +54,7 @@ function guessRole(languages) {
   return map[top] || "Software Dev";
 }
 
-/** Lấy tối đa 5 trang x 100 repo (đủ cho hầu hết user). */
+/** Fetch up to 5 pages of 100 repos (enough for most users). */
 async function fetchAllOwnedRepos(username) {
   const all = [];
   for (let page = 1; page <= 5; page++) {
@@ -68,8 +68,8 @@ async function fetchAllOwnedRepos(username) {
 }
 
 /**
- * Số PR đã được merge vào repo của người khác (đóng góp open source thật).
- * Search API có rate limit riêng → lỗi thì trả 0, không làm hỏng card.
+ * Count PRs merged into other people's repos (real open source work).
+ * The Search API has its own rate limit; on failure return 0.
  */
 async function fetchExternalMergedPRs(username) {
   try {

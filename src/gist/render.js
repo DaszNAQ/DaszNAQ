@@ -9,12 +9,12 @@ function codeWidth(code) {
   // combining marks / variation selectors
   if (code >= 0xfe00 && code <= 0xfe0f) return 0;
   if (code >= 0x0300 && code <= 0x036f) return 0;
-  // emoji & pictographs (⭐ 📦 👥 etc.)
+  // emoji and pictographs
   if (code >= 0x1f300 && code <= 0x1faff) return 2;
   if (code >= 0x1f000 && code <= 0x1f02f) return 2;
   // misc symbols / dingbats often render wide in gist
   if (code >= 0x2600 && code <= 0x27bf) return 2;
-  // zodiac ♈–♓ — treat wide so padding stays stable on GitHub
+  // zodiac signs: treat as wide to keep padding stable
   if (code >= 0x2648 && code <= 0x2653) return 2;
   // CJK / Hangul
   if (code >= 0x1100 && code <= 0x115f) return 2;
@@ -45,7 +45,7 @@ function clipPad(str, width) {
   return out + " ".repeat(Math.max(0, width - w));
 }
 
-/** 0–999 as-is; 1000+ as k (e.g. 1200 → 1.2k, 10000 → 10k). Fixed width for pin alignment. */
+/** 0-999 as-is; 1000+ as k (1200 -> 1.2k). Fixed width for pins. */
 function compactStat(n, width = 4) {
   return formatStatValue(n).padStart(width, " ");
 }
@@ -80,7 +80,7 @@ const ROLE_ABBR = {
   "devops engineer": "DevOps",
 };
 
-/** Prefer real abbreviations over mid-word clipping ("Full-Stack Develo"). */
+/** Prefer real abbreviations over mid-word clipping. */
 function abbreviateRole(role) {
   const raw = String(role || "Software Dev").trim();
   const mapped = ROLE_ABBR[raw.toLowerCase()];
@@ -92,14 +92,14 @@ function abbreviateRole(role) {
 }
 
 function abbreviateTitle(title) {
-  // Drop leading "The " so pin titles fit: "The Builder" → "Builder"
+  // Drop leading "The " so pin titles fit
   return String(title || "").replace(/^The\s+/i, "");
 }
 
 /**
- * Pin-first card: colorful left column + stable ASCII constellation on the right.
- * Display-width padding keeps the star map from drifting when stats change.
- * Languages stay below the pin fold (full names) — not squeezed into 5 lines.
+ * Pin-first card: stats left, ASCII constellation right.
+ * Display-width padding keeps the star map stable when stats change.
+ * Languages stay below the pin fold, shown with full names.
  */
 function secondaryDisplayName(profile) {
   const login = String(profile.username || "").trim();

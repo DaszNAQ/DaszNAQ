@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       birthdate,
       sign,
     });
-    // Stats values from GitHub; which 3 bars show comes from the zodiac sign
+    // Stat values come from GitHub; the sign picks the 3 bars
     const stats = calculateStats(profile);
     const svg = renderZodiacCard({
       profile,

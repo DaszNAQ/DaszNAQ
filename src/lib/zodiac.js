@@ -15,7 +15,7 @@ const SIGN_ORDER = [
   "sagittarius",
 ];
 
-/** Rough tropical date ranges (month/day). Capricorn wraps year end. */
+/** Tropical date ranges (month/day); Capricorn spans year end. */
 const RANGES = [
   { id: "capricorn", start: [12, 22], end: [1, 19] },
   { id: "aquarius", start: [1, 20], end: [2, 18] },
@@ -67,7 +67,7 @@ export function signFromBirthdate(birthdate) {
   return range ? getSignById(range.id) : null;
 }
 
-/** Deterministic “star map” when birthdate is omitted. */
+/** Deterministic sign from username when birthdate is omitted. */
 export function signFromUsername(username) {
   const idx = hashString(username.toLowerCase()) % SIGN_ORDER.length;
   return getSignById(SIGN_ORDER[idx]);

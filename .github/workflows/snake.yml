@@ -2,8 +2,8 @@ name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # chạy mỗi ngày lúc 00:00 UTC
-  workflow_dispatch:       # cho phép chạy thủ công
+    - cron: "0 0 * * *"   # runs daily at 00:00 UTC
+  workflow_dispatch:       # allows manual runs
   push:
     branches:
       - main

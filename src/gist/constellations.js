@@ -1,8 +1,8 @@
 /**
  * Per-sign constellations for pinned Gist cards.
  *
- * Built on a character grid, then rendered with ✦ as a *wide* (2-column) glyph
- * so connectors (/ \\ - |) stay visually aligned on GitHub / Windows fonts.
+ * Built on a character grid; each star is a wide glyph so connectors
+ * stay aligned on GitHub and Windows fonts.
  */
 
 /** Grid cells: '*' = star, other chars drawn as-is (width 1). */

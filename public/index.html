@@ -245,10 +245,10 @@
       const roleInput = document.getElementById("role");
       const nameInput = document.getElementById("name");
 
-      /** Auto defaults from GitHub; used to decide whether to bake overrides into the embed URL */
+      /** GitHub auto defaults; used to detect user overrides */
       let auto = { name: "", role: "" };
 
-      /** Accept YYYY-MM-DD only (English numeric form). Empty is fine. */
+      /** Accept YYYY-MM-DD only; empty is fine. */
       function normalizeBirthdate(value) {
         const raw = String(value || "").trim();
         if (!raw) return "";
@@ -262,7 +262,7 @@
         const params = new URLSearchParams({ username });
         if (birthdate) params.set("birthdate", birthdate);
 
-        // Only send overrides when the user changed the auto-estimated values
+        // Only send overrides the user actually changed
         if (name && name !== auto.name) params.set("name", name);
         if (role && role !== auto.role) params.set("role", role);
 
@@ -295,7 +295,7 @@
           const data = await loadDefaults(username, birthdate);
           auto = { name: data.name || data.username, role: data.role || "" };
 
-          // Prefill editable fields with auto estimates (user can change after)
+          // Prefill fields with auto estimates (editable)
           nameInput.value = auto.name;
           roleInput.value = auto.role;
 

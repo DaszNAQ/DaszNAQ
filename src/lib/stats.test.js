@@ -22,10 +22,10 @@ describe("calculateStats", () => {
   it("returns raw GitHub numbers, not weighted scores", () => {
     const stats = calculateStats(sample);
 
-    assert.equal(stats.explorer, 2); // số ngôn ngữ
-    assert.equal(stats.builder, 10); // repo gốc (không fork)
-    assert.equal(stats.openSource, 123); // 100 stars + 20 forks + 3 PR merged
-    assert.equal(stats.consistency, 4); // repo active 12 tháng
+    assert.equal(stats.explorer, 2); // distinct languages
+    assert.equal(stats.builder, 10); // original repos (no forks)
+    assert.equal(stats.openSource, 123); // stars + forks + merged PRs
+    assert.equal(stats.consistency, 4); // repos active in 12 months
     assert.equal(stats.debugger, 8); // open issues
   });
 

@@ -6,10 +6,10 @@ import constellationIcons from "../data/constellation-icons.js";
 import { EMBEDDED_FONT_CSS } from "../data/embedded-fonts.js";
 import signature from "../data/signature.js";
 
-/** Design coordinate space (viewBox). Display size can be smaller via options. */
+/** Design size (viewBox); display size can be smaller. */
 const WIDTH = 600;
 const HEIGHT = 320;
-/** Default on-page size — compact README card (override with ?width=). */
+/** Default display width for the README card (?width= overrides). */
 const DEFAULT_DISPLAY_WIDTH = 360;
 
 function escapeXml(str) {
@@ -59,15 +59,15 @@ function mixTowardBlack(hex, amount) {
   return `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 }
 
-/** Dark blue theme: overrides the per-sign palette so every card is navy. */
+/** Dark blue theme: overrides the sign palette for every card. */
 const DARK_BLUE_THEME = {
-  bg0: "#040b1f", // nền gradient - đầu
-  bg1: "#0b1e55", // nền gradient - cuối
-  accent: "#38bdf8", // tiêu đề, icon, chòm sao, glow
-  text: "#e0f2fe", // chữ chính
-  muted: "#93b4e0", // chữ phụ
-  bar: "#3b82f6", // thanh stat
-  star: "#bfdbfe", // các ngôi sao
+  bg0: "#040b1f", // gradient start
+  bg1: "#0b1e55", // gradient end
+  accent: "#38bdf8", // title, icons, constellation, glow
+  text: "#e0f2fe", // main text
+  muted: "#93b4e0", // secondary text
+  bar: "#3b82f6", // stat bars
+  star: "#bfdbfe", // stars
 };
 
 function applyDarkBlueTheme(colors) {
@@ -104,8 +104,8 @@ function renderStars(seed, color, count = 48) {
 }
 
 /**
- * Occasional shooting stars — deep background only (under stars + UI).
- * Soft, short sky-band streaks so they don't compete with text.
+ * Occasional shooting stars, kept in the deep background.
+ * Soft, short streaks so they never compete with text.
  */
 function renderShootingStars(seed, color, uid) {
   const rand = seededRandom(`meteors-${seed}`);
@@ -162,7 +162,7 @@ function renderShootingStars(seed, color, uid) {
   return parts.join("");
 }
 
-/** Constellation art (name + stars) in the top-right, accent-masked. */
+/** Constellation art in the top-right, tinted with the accent. */
 function renderConstellation(zodiac, colors, uid) {
   const icon = constellationIcons[zodiac.id];
   if (!icon) return "";
@@ -196,21 +196,12 @@ function renderStatBars(displayStats, colors) {
     .join("");
 }
 
-/**
- * Dòng giới thiệu dưới tên. Ưu tiên ?tagline= do người dùng tự đặt;
- * nếu không có thì hiển thị số liệu thật: repos · followers · năm tham gia.
- */
+/** Tagline under the role: ?tagline= override or the default text. */
+const DEFAULT_TAGLINE = "Code · Games · Ideas";
+
 function buildTagline(profile) {
   const custom = String(profile.tagline || "").trim();
-  if (custom) return custom;
-  const parts = [];
-  const repos = profile.originalRepos ?? profile.publicRepos;
-  if (Number.isFinite(repos)) parts.push(`${repos} repos`);
-  if (Number.isFinite(profile.followers)) {
-    parts.push(`${profile.followers} followers`);
-  }
-  if (profile.joinedYear) parts.push(`since ${profile.joinedYear}`);
-  return parts.join("   ·   ");
+  return custom || DEFAULT_TAGLINE;
 }
 
 function renderTagline(profile, colors) {
@@ -231,7 +222,7 @@ function renderDescription(zodiac, colors) {
     .join("\n    ");
 }
 
-/** Line-art illustration under the blurb (right column), tinted to accent. */
+/** Line-art under the blurb (right column), tinted with accent. */
 function renderLineArt(zodiac, colors, uid) {
   const icon = signIconsLine[zodiac.id];
   if (!icon) return "";
@@ -247,7 +238,7 @@ function renderLineArt(zodiac, colors, uid) {
     </rect>`;
 }
 
-/** Sign icon from assets/signs — tinted to accent via mask; falls back to emoji. */
+/** Sign icon tinted with the accent; falls back to the emoji. */
 function renderSignTitle(zodiac, colors, uid) {
   const icon = signIcons[zodiac.id];
   const label = escapeXml(zodiac.sign.toUpperCase());
@@ -267,10 +258,10 @@ function renderSignTitle(zodiac, colors, uid) {
     <text class="title" x="${x + size + 10}" y="48" fill="${colors.accent}" font-size="22" font-weight="700" letter-spacing="3">${label}</text>`;
 }
 
-/** Chữ ký góc dưới bên phải — PNG trắng/trong suốt dùng làm mask, tô màu theo theme. */
+/** Bottom-right signature: white PNG used as a mask, theme tinted. */
 function renderSignature(colors, uid) {
   const w = 84;
-  const h = Math.round((w / 2.852) * 10) / 10; // tỉ lệ ảnh chữ ký 154x54
+  const h = Math.round((w / 2.852) * 10) / 10; // image ratio 154x54
   const x = 480;
   const y = 270;
   return `
@@ -289,7 +280,7 @@ function secondaryDisplayName(profile) {
 }
 
 /**
- * @param {{ profile: object, zodiac: object, stats: object, meta?: { source?: string, width?: number } }} input
+ * @param {object} input - { profile, zodiac, stats, meta }
  */
 export function renderZodiacCard({ profile, zodiac, stats, meta = {} }) {
   const colors = applyDarkBlueTheme(zodiac.colors);
