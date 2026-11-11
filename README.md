@@ -16,7 +16,7 @@
 ---
 <p align="center">
   <img width="49%" src="https://zoodiac-card.vercel.app/api/skills" alt="Languages, Tools, Frameworks and AI" />
-  <img width="49%" src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius" alt="Sagittarius Zodiac Card" />
+<img width="49%" src="https://zoodiac-card.vercel.app/api/card?username=DaszNAQ&sign=sagittarius&refresh=20261111" alt="Sagittarius Zodiac Card" />
 </p>
 
 ---
